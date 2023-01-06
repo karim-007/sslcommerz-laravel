@@ -9,4 +9,5 @@ return [
     'failed_url' => '/sslcommerz/fail',
     'cancel_url' => '/sslcommerz/cancel',
     'ipn_url' => '/sslcommerz/ipn',
+    'return_response' => 'html', //html or json html means blade return json means json data return
 ];

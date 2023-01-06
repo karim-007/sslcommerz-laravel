@@ -20,6 +20,7 @@ class SslcommerzLaravelServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/Controllers/SslCommerzPaymentController.php' => app_path('Http/Controllers/SslCommerzPaymentController.php'),
         ]);
+        $this->publishes([__DIR__ . '/views' => resource_path('views/sslcommerz')], 'views');
 
         $this->loadRoutesFrom(__DIR__ . "/routes/sslcmz_route.php");
         $this->loadViewsFrom(__DIR__ . '/Views', 'sslcommerz');
