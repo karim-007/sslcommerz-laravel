@@ -23,11 +23,11 @@ composer require karim007/sslcommerz-laravel
 ### vendor publish (config)
 
 ```bash
+#it will publish config, controller and views
 php artisan vendor:publish --provider="Karim007\SslcommerzLaravel\SslcommerzLaravelServiceProvider"
 ```
 
 After publish config file setup your credential. you can see this in your config directory sslcommerz.php file
-
 ```
 'sandbox' => env("SSLCOMMERZ_SANDBOX", false), // For Sandbox, use "true", For Live, use "false"
 'middleware' => 'web',//you can change this middleware according to you
@@ -68,6 +68,8 @@ class SslCommerzPaymentController extends Controller
     public function fail(Request $request){}
     public function cancel(Request $request){}
     public function ipn(Request $request){}
+    private function returnSuccess($transId,$message){}
+    private function returnFail($transId,$message){}
 }
 ```
 
