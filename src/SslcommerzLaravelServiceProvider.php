@@ -34,7 +34,6 @@ class SslcommerzLaravelServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(__DIR__ . "/../config/sslcommerz.php", "sslcommerz");
-
         $this->app->bind("sslcommerznotification", function () {
             return new SslCommerzNotification();
         });
