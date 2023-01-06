@@ -1,0 +1,39 @@
+{
+    "name": "karim007/sslcommerz-laravel",
+    "description": "SSLCommerz - Laravel Library",
+    "type": "library",
+    "keywords": [
+        "SSLCommerz",
+        "SSLCommerz laravel",
+        "SSLCommerz payment getway",
+        "Composer package for SSLCommerz payment"
+    ],
+    "require": {
+        "php": "^7.4|^8.0|^8.1",
+        "illuminate/support": "~6|~7|~8|~9",
+        "ext-curl": "*"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Karim007\\SslcommerzLaravel\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Md abdul karim",
+            "email": "karim.cse007@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Karim007\\SslcommerzLaravel\\SslcommerzLaravelServiceProvider"
+            ],
+            "aliases": {
+                "SslcommerzLaravel": "Karim007\\SslcommerzLaravel\\SslcommerzLaravel"
+            }
+        }
+    }
+}
