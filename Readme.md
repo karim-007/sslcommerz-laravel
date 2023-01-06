@@ -93,8 +93,8 @@ protected $except = [
     '/sslcommerz/success',
     '/sslcommerz/cancel',
     '/sslcommerz/fail',
-    '/sslcommerz/ipn'
-    '/sslcommerz/pay-via-ajax', // only required to run example codes. Please see bellow.
+    '/sslcommerz/ipn',
+    '/sslcommerz/pay-via-ajax',
 ];
 ```
 
