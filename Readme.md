@@ -23,8 +23,8 @@ composer require karim007/sslcommerz-laravel
 ### vendor publish (config)
 
 ```bash
-#it will publish config, controller and views
-php artisan vendor:publish --provider="Karim007\SslcommerzLaravel\SslcommerzLaravelServiceProvider"
+#it will publish config file in your config folders
+php artisan vendor:publish --provider="Karim007\SslcommerzLaravel\SslcommerzLaravelServiceProvider" --tag="config"
 ```
 
 After publish config file setup your credential. you can see this in your config directory sslcommerz.php file
@@ -51,32 +51,8 @@ SSLCOMMERZ__STORE_PASSWORD=
 For development purposes, you can obtain sandbox 'Store ID' and 'Store Password'
 by registering at https://developer.sslcommerz.com/registration/
 
-###  after publish you also saw the controller SslCommerzPaymentController.php
-```
-class SslCommerzPaymentController extends Controller
-{
-    public function exampleEasyCheckout()
-    {
-        return view('sslcommerz::exampleEasycheckout');
-    }
-
-    public function exampleHostedCheckout()
-    {
-        return view('sslcommerz::exampleHosted');
-    }
-    public function index(Request $request){}
-    public function payViaAjax(Request $request){}
-    public function success(Request $request){}
-    public function fail(Request $request){}
-    public function cancel(Request $request){}
-    public function ipn(Request $request){}
-    private function returnSuccess($transId,$message){}
-    private function returnFail($transId,$message){}
-}
-```
-
-### routes list
-```
+### this is your routes list
+```php
 Route::group(['middleware'=>[config('sslcommerz.middleware','web')]], function () {
     Route::get('/sslcommerz/example1', [SslCommerzPaymentController::class, 'exampleEasyCheckout']);
     Route::get('/sslcommerz/example2', [SslCommerzPaymentController::class, 'exampleHostedCheckout']);
@@ -94,14 +70,97 @@ Route::group(['middleware'=>[config('sslcommerz.middleware','web')]], function (
 ### Add exceptions for VerifyCsrfToken middleware accordingly.
 ```php
 protected $except = [
-    '/sslcommerz/success',
-    '/sslcommerz/cancel',
-    '/sslcommerz/fail',
-    '/sslcommerz/ipn',
-    '/sslcommerz/pay-via-ajax',
+    '/sslcommerz/*',
 ];
 ```
 
+###  publish SslCommerzPaymentController.php controller
+
+```bash
+#it will publish controllers file in your app\Http\Controllers folders
+php artisan vendor:publish --provider="Karim007\SslcommerzLaravel\SslcommerzLaravelServiceProvider" --tag="controllers"
+```
+### For payment
+```php
+$post_data = array();
+$post_data['total_amount'] = '10'; # You cant not pay less than 10
+$post_data['currency'] = "BDT";
+$post_data['tran_id'] = uniqid(); // tran_id must be unique
+//for hosted payment
+$payment_options = SSLCommerzPayment::makePayment($post_data, 'hosted');
+#or
+//for api/popup payment
+$payment_options = SSLCommerzPayment::makePayment($post_data, 'checkout', 'json');
+```
+###  for other info append(optional)
+
+```php
+    # CUSTOMER INFORMATION
+    $customer = array();
+    $customer['cus_name'] = 'Customer Name';
+    $customer['cus_email'] = 'customer@mail.com';
+    $customer['cus_add1'] = 'Customer Address';
+    $customer['cus_add2'] = "";
+    $customer['cus_city'] = "";
+    $customer['cus_state'] = "";
+    $customer['cus_postcode'] = "";
+    $customer['cus_country'] = "Bangladesh";
+    $customer['cus_phone'] = '8801XXXXXXXXX';
+    $customer['cus_fax'] = "";
+    SSLCommerzPayment::setCustomerInfo($customer);
+    
+    # SHIPMENT INFORMATION
+    $shipping = array();
+    $shipping['ship_name'] = "Store Test";
+    $shipping['ship_add1'] = "Dhaka";
+    $shipping['ship_add2'] = "Dhaka";
+    $shipping['ship_city'] = "Dhaka";
+    $shipping['ship_state'] = "Dhaka";
+    $shipping['ship_postcode'] = "1000";
+    $shipping['ship_phone'] = "";
+    $shipping['ship_country'] = "Bangladesh";
+    $shipping['shipping_method'] = "NO";
+    
+    SSLCommerzPayment::setShipmentInfo($shipping);
+    
+    # Product info
+    $productInfo = array();
+    $productInfo['product_name'] = "Computer";
+    $productInfo['product_category'] = "Goods";
+    $productInfo['product_profile'] = "physical-goods";
+    SSLCommerzPayment::setProductInfo($productInfo);
+    
+    # OPTIONAL PARAMETERS
+    $addition = array();
+    $addition['value_a'] = "ref001";
+    $addition['value_b'] = "ref002";
+    $addition['value_c'] = "ref003";
+    $addition['value_d'] = "ref004";
+    SSLCommerzPayment::setAdditionalInfo($addition);
+    
+    //then you can call
+    SSLCommerzPayment::makePayment($post_data, 'hosted');
+    //or
+    SSLCommerzPayment::makePayment($post_data, 'checkout', 'json');
+
+```
+
+###  if you want you can publish orders migration
+
+```bash
+#if you already have orders or this related table then skip it
+#it will publish order migrations file in your database\migrations folders
+php artisan vendor:publish --provider="Karim007\SslcommerzLaravel\SslcommerzLaravelServiceProvider" --tag="migrations"
+
+php artisan migrate
+```
+
+###  you can also publish views(optionals)
+
+```bash
+#it will publish order migrations file in your resource\views\sslcommerz folders
+php artisan vendor:publish --provider="Karim007\SslcommerzLaravel\SslcommerzLaravelServiceProvider" --tag="views"
+```
 
 Contributions to the SSLCommerz Payment Gateway package  you are welcome. Please note the following guidelines before submitting your pull
 request.
