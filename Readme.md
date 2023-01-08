@@ -80,7 +80,7 @@ protected $except = [
 #it will publish controllers file in your app\Http\Controllers folders
 php artisan vendor:publish --provider="Karim007\SslcommerzLaravel\SslcommerzLaravelServiceProvider" --tag="controllers"
 ```
-### For payment
+### For payment ( All functionality already append in SslCommerzPaymentController)
 ```php
 $post_data = array();
 $post_data['total_amount'] = '10'; # You cant not pay less than 10
