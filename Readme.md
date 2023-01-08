@@ -51,6 +51,15 @@ SSLCOMMERZ__STORE_PASSWORD=
 For development purposes, you can obtain sandbox 'Store ID' and 'Store Password'
 by registering at https://developer.sslcommerz.com/registration/
 
+
+###  publish SslCommerzPaymentController.php controller
+
+```bash
+#it will publish controllers file in your app\Http\Controllers folders
+
+php artisan vendor:publish --provider="Karim007\SslcommerzLaravel\SslcommerzLaravelServiceProvider" --tag="controllers"
+```
+
 ### this is your routes list
 ```php
 Route::group(['middleware'=>[config('sslcommerz.middleware','web')]], function () {
@@ -74,12 +83,6 @@ protected $except = [
 ];
 ```
 
-###  publish SslCommerzPaymentController.php controller
-
-```bash
-#it will publish controllers file in your app\Http\Controllers folders
-php artisan vendor:publish --provider="Karim007\SslcommerzLaravel\SslcommerzLaravelServiceProvider" --tag="controllers"
-```
 ### For payment ( All functionality already append in SslCommerzPaymentController)
 ```php
 $post_data = array();
