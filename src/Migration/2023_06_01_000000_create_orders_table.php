@@ -20,9 +20,9 @@ return new class extends Migration
             $table->string('phone',60)->nullable();
             $table->double('amount')->default(0);
             $table->text('address')->nullable();
-            $table->string('status',20)->nullable();
-            $table->string('transaction_id',191)->nullable();
-            $table->string('currency',20)->nullable();
+            $table->string('status',20)->default('Pending');
+            $table->string('transaction_id',191);
+            $table->string('currency',20)->nullable()->default('BDT');
             $table->timestamps();
         });
     }

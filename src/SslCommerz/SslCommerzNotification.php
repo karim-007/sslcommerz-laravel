@@ -298,17 +298,8 @@ class SslCommerzNotification extends AbstractSslCommerz
         ##  Integration Required Parameters
         $this->setRequiredInfo($requestData);
 
-        ##  Customer Information
-        $this->setCustomerInfo($requestData);
-
-        ##  Shipment Information
-        $this->setShipmentInfo($requestData);
-
-        ##  Product Information
-        $this->setProductInfo($requestData);
-
-        ##  Customized or Additional Parameters
-        $this->setAdditionalInfo($requestData);
+        ## default info
+        $this->defaultInfo();
     }
 
     public function setAuthenticationInfo()
@@ -324,13 +315,17 @@ class SslCommerzNotification extends AbstractSslCommerz
         $this->data['total_amount'] = $info['total_amount']; // decimal (10,2)	Mandatory - The amount which will process by SSLCommerz. It shall be decimal value (10,2). Example : 55.40. The transaction amount must be from 10.00 BDT to 500000.00 BDT
         $this->data['currency'] = $info['currency']; // string (3)	Mandatory - The currency type must be mentioned. It shall be three characters. Example : BDT, USD, EUR, SGD, INR, MYR, etc. If the transaction currency is not BDT, then it will be converted to BDT based on the current convert rate. Example : 1 USD = 82.22 BDT.
         $this->data['tran_id'] = $info['tran_id']; // string (30)	Mandatory - Unique transaction ID to identify your order in both your end and SSLCommerz
-        $this->data['product_category'] = $info['product_category']; // string (50)	Mandatory - Mention the product category. It is a open field. Example - clothing,shoes,watches,gift,healthcare, jewellery,top up,toys,baby care,pants,laptop,donation,etc
+        $this->data['product_category'] = (isset($info['product_category'])) ? $info['product_category'] : 'Our Product'; // string (50)	Mandatory - Mention the product category. It is a open field. Example - clothing,shoes,watches,gift,healthcare, jewellery,top up,toys,baby care,pants,laptop,donation,etc
 
+        return $this->data;
+    }
+
+    private function defaultInfo(){
         // Set the SUCCESS, FAIL, CANCEL Redirect URL before setting the other parameters
         $this->setSuccessUrl();
         $this->setFailedUrl();
         $this->setCancelUrl();
-		$this->setIPNUrl();
+        $this->setIPNUrl();
 
         $this->data['success_url'] = $this->getSuccessUrl(); // string (255)	Mandatory - It is the callback URL of your website where user will redirect after successful payment (Length: 255)
         $this->data['fail_url'] = $this->getFailedUrl(); // string (255)	Mandatory - It is the callback URL of your website where user will redirect after any failure occure during payment (Length: 255)
@@ -344,7 +339,7 @@ class SslCommerzNotification extends AbstractSslCommerz
          * Important! Not mandatory, however better to use to avoid missing any payment notification - It is the Instant Payment Notification (IPN) URL of your website where SSLCOMMERZ will send the transaction's status (Length: 255).
          * The data will be communicated as SSLCOMMERZ Server to your Server. So, customer session will not work.
 		*/
-		$this->data['ipn_url'] = $this->getIPNUrl();
+        $this->data['ipn_url'] = $this->getIPNUrl();
 
         /*
          * Type: string (30)
@@ -395,6 +390,38 @@ class SslCommerzNotification extends AbstractSslCommerz
         $this->data['emi_selected_inst'] = (isset($info['emi_selected_inst'])) ? $info['emi_selected_inst'] : null; // integer (2)	Customer has selected from your Site, So no instalment option will be displayed at gateway page
         $this->data['emi_allow_only'] = (isset($info['emi_allow_only'])) ? $info['emi_allow_only'] : 0;
 
+        # CUSTOMER INFORMATION
+        $this->data['cus_name'] = 'Customer Name';
+        $this->data['cus_email'] = 'customer@mail.com';
+        $this->data['cus_add1'] = 'Customer Address';
+        $this->data['cus_add2'] = "";
+        $this->data['cus_city'] = "";
+        $this->data['cus_state'] = "";
+        $this->data['cus_postcode'] = "";
+        $this->data['cus_country'] = "Bangladesh";
+        $this->data['cus_phone'] = '8801XXXXXXXXX';
+        $this->data['cus_fax'] = "";
+
+        # SHIPMENT INFORMATION
+        $this->data['ship_name'] = "Store Test";
+        $this->data['ship_add1'] = "Dhaka";
+        $this->data['ship_add2'] = "Dhaka";
+        $this->data['ship_city'] = "Dhaka";
+        $this->data['ship_state'] = "Dhaka";
+        $this->data['ship_postcode'] = "1000";
+        $this->data['ship_phone'] = "";
+        $this->data['ship_country'] = "Bangladesh";
+
+        $this->data['shipping_method'] = "NO";
+        $this->data['product_name'] = "Computer";
+        $this->data['product_category'] = "Goods";
+        $this->data['product_profile'] = "physical-goods";
+
+        # OPTIONAL PARAMETERS
+        $this->data['value_a'] = "ref001";
+        $this->data['value_b'] = "ref002";
+        $this->data['value_c'] = "ref003";
+        $this->data['value_d'] = "ref004";
         return $this->data;
     }
 
@@ -436,17 +463,6 @@ class SslCommerzNotification extends AbstractSslCommerz
         $this->data['product_name'] = (isset($info['product_name'])) ? $info['product_name'] : ''; // String (256)	Mandatory - Mention the product name briefly. Mention the product name by coma separate. Example: Computer,Speaker
         $this->data['product_category'] = (isset($info['product_category'])) ? $info['product_category'] : ''; // String (100)	Mandatory - Mention the product category. Example: Electronic or topup or bus ticket or air ticket
 
-        /*
-         * String (100)
-         * Mandatory - Mention goods vertical. It is very much necessary for online transactions to avoid chargeback.
-         * Please use the below keys :
-            1) general
-            2) physical-goods
-            3) non-physical-goods
-            4) airline-tickets
-            5) travel-vertical
-            6) telecom-vertical
-        */
         $this->data['product_profile'] = (isset($info['product_profile'])) ? $info['product_profile'] : '';
 
         $this->data['hours_till_departure'] = (isset($info['hours_till_departure'])) ? $info['hours_till_departure'] : null; // string (30)	Mandatory, if product_profile is airline-tickets - Provide the remaining time of departure of flight till at the time of purchasing the ticket. Example: 12 hrs or 36 hrs
@@ -485,5 +501,18 @@ class SslCommerzNotification extends AbstractSslCommerz
         $this->data['value_d'] = (isset($info['value_d'])) ? $info['value_d'] : null; // value_d [ string (255)	- Extra parameter to pass your meta data if it is needed. Not mandatory]
 
         return $this->data;
+    }
+
+    public function returnSuccess($transId,$message){
+        if ($this->config['return_response'] == 'html'){
+            return view('sslcommerz::success',compact('transId','message'));
+        }
+        return response()->json(['status'=>'success','transaction_id'=>$transId,'message'=>$message],200);
+    }
+    public function returnFail($transId,$message){
+        if ($this->config['return_response'] == 'html'){
+            return view('sslcommerz::failed',compact('transId','message'));
+        }
+        return response()->json(['status'=>'error','transaction_id'=>$transId,'message'=>$message],404);
     }
 }

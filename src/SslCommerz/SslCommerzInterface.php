@@ -18,6 +18,8 @@ interface SslCommerzInterface
     public function setProductInfo(array $data);
 
     public function setAdditionalInfo(array $data);
+    public function returnSuccess($transId,$message);
+    public function returnFail($transId,$message);
 
     public function callToApi($data, $header = [], $setLocalhost = false);
 }
