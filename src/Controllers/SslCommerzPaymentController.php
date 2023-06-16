@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Karim007\SslcommerzLaravel\Facade\SSLCommerzPayment;
-
+use Karim007\SslcommerzLaravel\SslCommerz\SslCommerzNotification;
 class SslCommerzPaymentController extends Controller
 {
 
@@ -26,6 +26,35 @@ class SslCommerzPaymentController extends Controller
         $post_data['currency'] = "BDT";
         $post_data['tran_id'] = uniqid(); // tran_id must be unique
 
+        $customer = array();
+        $customer['name'] = 'Ab Karim';
+        $customer['email'] = 'customer@mail.com';
+        $customer['address_1'] = 'Dhaka';
+        $customer['address_2'] = "";
+        $customer['city'] = "";
+        $customer['state'] = "";
+        $customer['postcode'] = "";
+        $customer['country'] = "Bangladesh";
+        $customer['phone'] = '8801XXXXXXXXX';
+        $customer['fax'] = "";
+        // SSLCommerzPayment::setCustomerInfo($customer);
+
+        $s_info = array();
+        $s_info['shipping_method'] = 'Yes'; // string (50)	Mandatory - Shipping method of the order. Example: YES or NO or Courier
+        $s_info['num_of_item'] = 1; // integer (1)	Mandatory - No of product will be shipped. Example: 1 or 2 or etc
+        $s_info['ship_name'] = 'Abc'; // string (50)	Mandatory, if shipping_method is YES - Shipping Address of your order. Not mandatory but useful if provided
+        $s_info['ship_add1'] = 'Dhaka';; // string (50)	Mandatory, if shipping_method is YES - Additional Shipping Address of your order. Not mandatory but useful if provided
+        $s_info['ship_add2'] = ''; // string (50)	Additional Shipping Address of your order. Not mandatory but useful if provided
+        $s_info['ship_city'] = 'Dhaka'; // string (50)	Mandatory, if shipping_method is YES - Shipping city of your order. Not mandatory but useful if provided
+        $s_info['ship_state'] = ''; // string (50)	Shipping state of your order. Not mandatory but useful if provided
+        $s_info['ship_postcode'] = '1215'; // string (50)	Mandatory, if shipping_method is YES - Shipping postcode of your order. Not mandatory but useful if provided
+        $s_info['ship_country'] = 'Bangladesh'; // string (50)	Mandatory, if shipping_method is YES - Shipping country of your order. Not mandatory but useful if provided
+
+        $sslc = new SslCommerzNotification();
+        $sslc->setCustomerInfo($customer)->setShipmentInfo($s_info);
+
+
+
         #Before  going to initiate the payment order status need to insert or update as Pending.
         DB::table('orders')
             ->where('transaction_id', $post_data['tran_id'])
@@ -37,7 +66,7 @@ class SslCommerzPaymentController extends Controller
             ]);
 
         # initiate(Transaction Data , false: Redirect to SSLCOMMERZ gateway/ true: Show all the Payement gateway here )
-        $payment_options = SSLCommerzPayment::makePayment($post_data, 'hosted');
+        $payment_options = $sslc->makePayment($post_data, 'hosted');
         return $payment_options;
 
     }
@@ -48,6 +77,34 @@ class SslCommerzPaymentController extends Controller
         $post_data['total_amount'] = '10'; # You cant not pay less than 10
         $post_data['currency'] = "BDT";
         $post_data['tran_id'] = uniqid(); // tran_id must be unique
+
+        $customer = array();
+        $customer['name'] = 'Ab Karim';
+        $customer['email'] = 'customer@mail.com';
+        $customer['address_1'] = 'Dhaka';
+        $customer['address_2'] = "";
+        $customer['city'] = "";
+        $customer['state'] = "";
+        $customer['postcode'] = "";
+        $customer['country'] = "Bangladesh";
+        $customer['phone'] = '8801XXXXXXXXX';
+        $customer['fax'] = "";
+        // SSLCommerzPayment::setCustomerInfo($customer);
+
+        $s_info = array();
+        $s_info['shipping_method'] = 'Yes'; // string (50)	Mandatory - Shipping method of the order. Example: YES or NO or Courier
+        $s_info['num_of_item'] = 1; // integer (1)	Mandatory - No of product will be shipped. Example: 1 or 2 or etc
+        $s_info['ship_name'] = 'Abc'; // string (50)	Mandatory, if shipping_method is YES - Shipping Address of your order. Not mandatory but useful if provided
+        $s_info['ship_add1'] = 'Dhaka';; // string (50)	Mandatory, if shipping_method is YES - Additional Shipping Address of your order. Not mandatory but useful if provided
+        $s_info['ship_add2'] = ''; // string (50)	Additional Shipping Address of your order. Not mandatory but useful if provided
+        $s_info['ship_city'] = 'Dhaka'; // string (50)	Mandatory, if shipping_method is YES - Shipping city of your order. Not mandatory but useful if provided
+        $s_info['ship_state'] = ''; // string (50)	Shipping state of your order. Not mandatory but useful if provided
+        $s_info['ship_postcode'] = '1215'; // string (50)	Mandatory, if shipping_method is YES - Shipping postcode of your order. Not mandatory but useful if provided
+        $s_info['ship_country'] = 'Bangladesh'; // string (50)	Mandatory, if shipping_method is YES - Shipping country of your order. Not mandatory but useful if provided
+
+        $sslc = new SslCommerzNotification();
+        $sslc->setCustomerInfo($customer)->setShipmentInfo($s_info);
+
 
         #Before  going to initiate the payment order status need to update as Pending.
         DB::table('orders')
@@ -60,7 +117,7 @@ class SslCommerzPaymentController extends Controller
             ]);
 
         # initiate(Transaction Data , false: Redirect to SSLCOMMERZ gateway/ true: Show all the Payement gateway here )
-        $payment_options = SSLCommerzPayment::makePayment($post_data, 'checkout', 'json');
+        $payment_options = $sslc->makePayment($post_data, 'checkout', 'json');
         return $payment_options;
 
     }

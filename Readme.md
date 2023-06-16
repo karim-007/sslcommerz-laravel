@@ -89,62 +89,53 @@ $post_data = array();
 $post_data['total_amount'] = '10'; # You cant not pay less than 10
 $post_data['currency'] = "BDT";
 $post_data['tran_id'] = uniqid(); // tran_id must be unique
+
+$sslc = new SslCommerzNotification();
+
 //for hosted payment
-$payment_options = SSLCommerzPayment::makePayment($post_data, 'hosted');
+$payment_options = $sslc->makePayment($post_data, 'hosted');
 #or
 //for api/popup payment
-$payment_options = SSLCommerzPayment::makePayment($post_data, 'checkout', 'json');
+$payment_options = $sslc->makePayment($post_data, 'checkout', 'json');
 ```
 ###  for other info append(optional)
 
 ```php
-    # CUSTOMER INFORMATION
+    $post_data = array();
+    $post_data['total_amount'] = '10'; # You cant not pay less than 10
+    $post_data['currency'] = "BDT";
+    $post_data['tran_id'] = uniqid(); // tran_id must be unique
+
     $customer = array();
-    $customer['cus_name'] = 'Customer Name';
-    $customer['cus_email'] = 'customer@mail.com';
-    $customer['cus_add1'] = 'Customer Address';
-    $customer['cus_add2'] = "";
-    $customer['cus_city'] = "";
-    $customer['cus_state'] = "";
-    $customer['cus_postcode'] = "";
-    $customer['cus_country'] = "Bangladesh";
-    $customer['cus_phone'] = '8801XXXXXXXXX';
-    $customer['cus_fax'] = "";
-    SSLCommerzPayment::setCustomerInfo($customer);
-    
-    # SHIPMENT INFORMATION
-    $shipping = array();
-    $shipping['ship_name'] = "Store Test";
-    $shipping['ship_add1'] = "Dhaka";
-    $shipping['ship_add2'] = "Dhaka";
-    $shipping['ship_city'] = "Dhaka";
-    $shipping['ship_state'] = "Dhaka";
-    $shipping['ship_postcode'] = "1000";
-    $shipping['ship_phone'] = "";
-    $shipping['ship_country'] = "Bangladesh";
-    $shipping['shipping_method'] = "NO";
-    
-    SSLCommerzPayment::setShipmentInfo($shipping);
-    
-    # Product info
-    $productInfo = array();
-    $productInfo['product_name'] = "Computer";
-    $productInfo['product_category'] = "Goods";
-    $productInfo['product_profile'] = "physical-goods";
-    SSLCommerzPayment::setProductInfo($productInfo);
-    
-    # OPTIONAL PARAMETERS
-    $addition = array();
-    $addition['value_a'] = "ref001";
-    $addition['value_b'] = "ref002";
-    $addition['value_c'] = "ref003";
-    $addition['value_d'] = "ref004";
-    SSLCommerzPayment::setAdditionalInfo($addition);
+    $customer['name'] = 'Ab Karim';
+    $customer['email'] = 'customer@mail.com';
+    $customer['address_1'] = 'Dhaka';
+    $customer['address_2'] = "";
+    $customer['city'] = "";
+    $customer['state'] = "";
+    $customer['postcode'] = "";
+    $customer['country'] = "Bangladesh";
+    $customer['phone'] = '8801XXXXXXXXX';
+    $customer['fax'] = "";
+
+    $s_info = array();
+    $s_info['shipping_method'] = 'Yes'; // string (50)	Mandatory - Shipping method of the order. Example: YES or NO or Courier
+    $s_info['num_of_item'] = 1; // integer (1)	Mandatory - No of product will be shipped. Example: 1 or 2 or etc
+    $s_info['ship_name'] = 'Abc'; // string (50)	Mandatory, if shipping_method is YES - Shipping Address of your order. Not mandatory but useful if provided
+    $s_info['ship_add1'] = 'Dhaka';; // string (50)	Mandatory, if shipping_method is YES - Additional Shipping Address of your order. Not mandatory but useful if provided
+    $s_info['ship_add2'] = ''; // string (50)	Additional Shipping Address of your order. Not mandatory but useful if provided
+    $s_info['ship_city'] = 'Dhaka'; // string (50)	Mandatory, if shipping_method is YES - Shipping city of your order. Not mandatory but useful if provided
+    $s_info['ship_state'] = ''; // string (50)	Shipping state of your order. Not mandatory but useful if provided
+    $s_info['ship_postcode'] = '1215'; // string (50)	Mandatory, if shipping_method is YES - Shipping postcode of your order. Not mandatory but useful if provided
+    $s_info['ship_country'] = 'Bangladesh'; // string (50)	Mandatory, if shipping_method is YES - Shipping country of your order. Not mandatory but useful if provided
+
+    $sslc = new SslCommerzNotification();
+    $sslc->setCustomerInfo($customer)->setShipmentInfo($s_info);
     
     //then you can call
-    SSLCommerzPayment::makePayment($post_data, 'hosted');
+    $sslc->makePayment($post_data, 'hosted');
     //or
-    SSLCommerzPayment::makePayment($post_data, 'checkout', 'json');
+    $sslc->makePayment($post_data, 'checkout', 'json');
 
 ```
 
