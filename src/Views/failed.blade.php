@@ -121,7 +121,7 @@
         <p id='message'>
             {{ $message }} Transaction ID {{ $transId }}
         </p>
-        <a href="/" id="contBtn">Continue</a>
+        <a href="{{ $url }}" id="contBtn">Continue</a>
     </div>
 </div>
 </body>
