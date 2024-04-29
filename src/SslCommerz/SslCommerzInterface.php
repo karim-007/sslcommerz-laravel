@@ -18,8 +18,8 @@ interface SslCommerzInterface
     public function setTravelVerticalProfile(array $info);
     public function setTelecomVerticleProfile(array $info);
     public function setCarts(array $info);
-    public function returnSuccess($transId,$message);
-    public function returnFail($transId,$message);
+    public function returnSuccess($transId,$message,$url='/');
+    public function returnFail($transId,$message,$url='/');
 
     public function callToApi($data, $header = [], $setLocalhost = false);
 }

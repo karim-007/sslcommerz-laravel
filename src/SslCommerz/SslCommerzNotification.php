@@ -509,16 +509,16 @@ class SslCommerzNotification extends AbstractSslCommerz
         return $this;
     }
 
-    public function returnSuccess($transId,$message){
+    public function returnSuccess($transId,$message,$url='/'){
         if ($this->config['return_response'] == 'html'){
-            return view('sslcommerz::success',compact('transId','message'));
+            return view('sslcommerz::success',compact('transId','message','url'));
         }
-        return response()->json(['status'=>'success','transaction_id'=>$transId,'message'=>$message],200);
+        return response()->json(['status'=>'success','transaction_id'=>$transId,'message'=>$message,'return_url'=>$url],200);
     }
-    public function returnFail($transId,$message){
+    public function returnFail($transId,$message,$url='/'){
         if ($this->config['return_response'] == 'html'){
-            return view('sslcommerz::failed',compact('transId','message'));
+            return view('sslcommerz::failed',compact('transId','message','url'));
         }
-        return response()->json(['status'=>'error','transaction_id'=>$transId,'message'=>$message],404);
+        return response()->json(['status'=>'error','transaction_id'=>$transId,'message'=>$message,'return_url'=>$url],404);
     }
 }
