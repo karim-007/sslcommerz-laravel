@@ -135,13 +135,13 @@ class SslCommerzPaymentController extends Controller
 
             if ($validation) {
                 $this->orderUpdate($tran_id,'Processing');
-                return SSLCommerzPayment::returnSuccess($tran_id,"Transaction is successfully Completed");
+                return SSLCommerzPayment::returnSuccess($tran_id,"Transaction is successfully Completed",'/');
             }
         } else if ($order_detials->status == 'Processing' || $order_detials->status == 'Complete') {
-            return SSLCommerzPayment::returnSuccess($tran_id,"Transaction is successfully Completed");
+            return SSLCommerzPayment::returnSuccess($tran_id,"Transaction is successfully Completed",'/');
         }
         #That means something wrong happened. You can redirect customer to your product page.
-        return SSLCommerzPayment::returnFail($tran_id,"Invalid Transaction");
+        return SSLCommerzPayment::returnFail($tran_id,"Invalid Transaction",'/');
 
     }
 
@@ -151,11 +151,11 @@ class SslCommerzPaymentController extends Controller
         $order_detials = $this->findOrder($tran_id);
         if ($order_detials->status == 'Pending') {
             $this->orderUpdate($tran_id,'Failed');
-            return SSLCommerzPayment::returnFail($tran_id,"Transaction is Failed");
+            return SSLCommerzPayment::returnFail($tran_id,"Transaction is Failed",'/');
         } else if ($order_detials->status == 'Processing' || $order_detials->status == 'Complete') {
-            return SSLCommerzPayment::returnSuccess($tran_id,"Transaction is already Successful");
+            return SSLCommerzPayment::returnSuccess($tran_id,"Transaction is already Successful",'/');
         } else {
-            return SSLCommerzPayment::returnFail($tran_id,"Transaction is Invalid");
+            return SSLCommerzPayment::returnFail($tran_id,"Transaction is Invalid",'/');
         }
 
     }
@@ -167,11 +167,11 @@ class SslCommerzPaymentController extends Controller
         $order_detials = $this->findOrder($tran_id);
         if ($order_detials->status == 'Pending') {
             $this->orderUpdate($tran_id,'Canceled');
-            return SSLCommerzPayment::returnFail($tran_id,"Transaction is Cancel");
+            return SSLCommerzPayment::returnFail($tran_id,"Transaction is Cancel",'/');
         } else if ($order_detials->status == 'Processing' || $order_detials->status == 'Complete') {
-            return SSLCommerzPayment::returnSuccess($tran_id,"Transaction is already Successful");
+            return SSLCommerzPayment::returnSuccess($tran_id,"Transaction is already Successful",'/');
         } else {
-            return SSLCommerzPayment::returnFail($tran_id,"Transaction is Invalid");
+            return SSLCommerzPayment::returnFail($tran_id,"Transaction is Invalid",'/');
         }
     }
 
@@ -190,16 +190,16 @@ class SslCommerzPaymentController extends Controller
                 $validation = SSLCommerzPayment::orderValidate($request->all(), $tran_id, $order_details->amount, $order_details->currency);
                 if ($validation == TRUE) {
                     $this->orderUpdate($tran_id,'Processing');
-                    return SSLCommerzPayment::returnSuccess($tran_id,"Transaction is successfully Completed");
+                    return SSLCommerzPayment::returnSuccess($tran_id,"Transaction is successfully Completed",'/');
                 }
             } else if ($order_details->status == 'Processing' || $order_details->status == 'Complete') {
-                return SSLCommerzPayment::returnSuccess($tran_id,"Transaction is already successfully Completed");
+                return SSLCommerzPayment::returnSuccess($tran_id,"Transaction is already successfully Completed",'/');
             } else {
                 #That means something wrong happened. You can redirect customer to your product page.
-                return SSLCommerzPayment::returnFail($tran_id,"Invalid Transaction");
+                return SSLCommerzPayment::returnFail($tran_id,"Invalid Transaction",'/');
             }
         }
-        return SSLCommerzPayment::returnFail('',"Invalid Data");
+        return SSLCommerzPayment::returnFail('',"Invalid Data",'/');
     }
 
     private function orderUpdate($tran_id,$status){

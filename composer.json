@@ -9,8 +9,7 @@
         "Composer package for SSLCommerz payment"
     ],
     "require": {
-        "php": "^7.4|^8.0|^8.1|^10",
-        "illuminate/support": "^6|^7|^8|^9|^10",
+        "php": "^7.4|^8.0|^8.1|^8.2|^10",
         "ext-curl": "*"
     },
     "license": "MIT",
