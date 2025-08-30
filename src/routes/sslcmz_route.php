@@ -14,5 +14,6 @@ Route::group(['middleware'=>[config('sslcommerz.middleware','web')]], function (
     Route::post('/sslcommerz/cancel', [SslCommerzPaymentController::class, 'cancel']);
 
     Route::post('/sslcommerz/ipn', [SslCommerzPaymentController::class, 'ipn']);
+    Route::get('/sslcommerz/refund/payment', [SslCommerzPaymentController::class, 'refundPayment']);
 });
 

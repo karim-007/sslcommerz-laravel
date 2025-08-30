@@ -266,30 +266,28 @@ class SslCommerzNotification extends AbstractSslCommerz
 
     public function refundPayment($bankTranId, $refundAmount, $refundRemarks = "Customer return ticket")
     {
-        $postData = [
+
+        // Set API URL for refund
+        $this->setApiUrl($this->paymentUrl['refund_payment']);
+
+        // Prepare refund POST data
+        $data = [
             'store_id'       => $this->getStoreId(),
             'store_passwd'   => $this->getStorePassword(),
             'bank_tran_id'   => $bankTranId,    // from success response
             'refund_amount'  => $refundAmount,  // partial or full
             'refund_remarks' => $refundRemarks,
             'refe_id'        => uniqid("REF_"), // unique reference for your system
+            'format'        => "json"
         ];
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->paymentUrl['refund_payment']);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // Headers are optional (SSLCommerz doesn’t require extra headers)
+        $headers = [
+            'Content-Type: application/json'
+        ];
 
-        if ($this->config['sandbox']) {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        }
-
-        $response = curl_exec($ch);
-        curl_close($ch);
-
-        return json_decode($response, true);
+        // Call refund API
+        return $this->callToApi(http_build_query($data), $headers, $this->config['sandbox']);
     }
 
     public function refundStatus($refundRefId)

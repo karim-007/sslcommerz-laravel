@@ -73,8 +73,14 @@ abstract class AbstractSslCommerz implements SslCommerzInterface
         if ($code == 200 & !($curlErrorNo)) {
             return $response;
         } else {
-            return "FAILED TO CONNECT WITH SSLCOMMERZ API";
-            //return "cURL Error #:" . $err;
+            return [
+                'status' => 'FAILED',
+                'http_code' => $code,
+                'curl_error' => $err,
+                'curl_errno' => $curlErrorNo,
+                'api_url' => $this->getApiUrl(),
+                'post_data' => $data
+            ];
         }
     }
 
