@@ -1,6 +1,8 @@
 <?php
 namespace Karim007\SslcommerzLaravel\SslCommerz;
 
+use Illuminate\Support\Facades\Http;
+
 class SslCommerzNotification extends AbstractSslCommerz
 {
     protected $data = [];
@@ -266,28 +268,17 @@ class SslCommerzNotification extends AbstractSslCommerz
 
     public function refundPayment($bankTranId, $refundAmount, $refundRemarks = "Customer return ticket")
     {
-
-        // Set API URL for refund
-        $this->setApiUrl($this->paymentUrl['refund_payment']);
-
-        // Prepare refund POST data
-        $data = [
-            'store_id'       => $this->getStoreId(),
-            'store_passwd'   => $this->getStorePassword(),
-            'bank_tran_id'   => $bankTranId,    // from success response
-            'refund_amount'  => $refundAmount,  // partial or full
-            'refund_remarks' => $refundRemarks,
-            'refe_id'        => uniqid("REF_"), // unique reference for your system
-            'format'        => "json"
-        ];
-
-        // Headers are optional (SSLCommerz doesn’t require extra headers)
-        $headers = [
-            'Content-Type: application/json'
-        ];
-
-        // Call refund API
-        return $this->callToApi(http_build_query($data), $headers, $this->config['sandbox']);
+        $response = Http::get($this->paymentUrl['refund_payment'], [
+            'bank_tran_id' => $bankTranId,
+            'refund_trans_id' => uniqid(),
+            'refund_amount' => $refundAmount,
+            'refund_remarks' => 'Return booking',
+            'store_id' => $this->getStoreId(),
+            'store_passwd' => $this->getStorePassword(),
+            'format' => 'json',
+            'v' => 1
+        ]);
+        return $response->json();
     }
 
     public function refundStatus($refundRefId)
