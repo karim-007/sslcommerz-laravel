@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Facade;
  * @method static setShipmentInfo(array $info)
  * @method static setProductInfo(array $info)
  * @method static setAdditionalInfo(array $info)
+ * @method static refundPayment($bankTranId, $refundAmount, $refundRemarks = "Customer return ticket");
+ * @method static refundStatus($refundRefId);
  */
 class SSLCommerzPayment extends Facade
 {

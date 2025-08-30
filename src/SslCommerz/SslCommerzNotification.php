@@ -264,7 +264,61 @@ class SslCommerzNotification extends AbstractSslCommerz
         }
     }
 
-	private function setSuccessUrl() {
+    public function refundPayment($bankTranId, $refundAmount, $refundRemarks = "Customer return ticket")
+    {
+        $postData = [
+            'store_id'       => $this->getStoreId(),
+            'store_passwd'   => $this->getStorePassword(),
+            'bank_tran_id'   => $bankTranId,    // from success response
+            'refund_amount'  => $refundAmount,  // partial or full
+            'refund_remarks' => $refundRemarks,
+            'refe_id'        => uniqid("REF_"), // unique reference for your system
+        ];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->paymentUrl['refund_payment']);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        if ($this->config['sandbox']) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        }
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return json_decode($response, true);
+    }
+
+    public function refundStatus($refundRefId)
+    {
+        $postData = [
+            'store_id'     => $this->getStoreId(),
+            'store_passwd' => $this->getStorePassword(),
+            'refund_ref_id'=> $refundRefId, // received from refund API response
+        ];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->paymentUrl['refund_status']);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        if ($this->config['sandbox']) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        }
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return json_decode($response, true);
+    }
+
+
+    private function setSuccessUrl() {
 		$this->successUrl = url('/') . $this->config['success_url'];
         return $this;
     }

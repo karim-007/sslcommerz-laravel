@@ -5,6 +5,8 @@ interface SslCommerzInterface
 {
     public function makePayment(array $data);
 
+    public function refundPayment($bankTranId, $refundAmount, $refundRemarks = "Customer return ticket");
+    public function refundStatus($refundRefId);
     public function orderValidate($requestData, $trxID, $amount, $currency);
 
     public function setCustomerInfo(array $data);
